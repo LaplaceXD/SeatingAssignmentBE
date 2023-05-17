@@ -9,6 +9,9 @@ class IssueType extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+    protected $table = 'IssueTypes';
+
     protected $fillable = [
         'Name'
     ];

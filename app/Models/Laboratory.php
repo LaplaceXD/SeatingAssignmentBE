@@ -9,6 +9,8 @@ class Laboratory extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'LabName',
         'RoomNo',

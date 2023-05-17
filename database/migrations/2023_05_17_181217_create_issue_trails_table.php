@@ -1,0 +1,42 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('IssueTrails', function (Blueprint $table) {
+            $table->id('TrailID');
+            $table->foreignId('IssueID')
+                ->constrained('Issues', 'IssueID', 'trails_issue_id')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
+            // Tracks the previous and current value of a field
+            $table->string('FieldName', 64);
+            $table->string('PreviousValue', 256);
+            $table->string('NewValue', 256);
+
+            // Some Trails are just information messages
+            // Ex. Issue Created
+            $table->text('Message');
+
+            $table->enum('ActionType', ['Change', 'Message']);
+            $table->timestamp('ExecutedAt')->useCurrent();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('IssueTrails');
+    }
+};

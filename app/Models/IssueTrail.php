@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class IssueTrail extends Model
 {
     use HasFactory;
+
+    protected $primaryKey = 'TrailID';
 }

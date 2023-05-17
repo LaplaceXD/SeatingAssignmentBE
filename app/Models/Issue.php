@@ -9,6 +9,8 @@ class Issue extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'IssueID';
+
     protected $fillable = [
         'IssuerID',
         'ValidatorID',

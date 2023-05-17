@@ -10,4 +10,5 @@ class Laboratory extends Model
     use HasFactory;
 
     public $timestamps = false;
+    protected $primaryKey = 'LabID';
 }

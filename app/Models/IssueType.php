@@ -11,6 +11,7 @@ class IssueType extends Model
 
     public $timestamps = false;
     protected $table = 'IssueTypes';
+    protected $primaryKey = 'TypeID';
 
     protected $fillable = [
         'Name'

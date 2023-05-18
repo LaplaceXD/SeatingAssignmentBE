@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\IssueType;
 use App\Http\Requests\IssueTypeRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class IssueTypeController extends Controller
 {
@@ -29,7 +29,10 @@ class IssueTypeController extends Controller
      */
     public function show(string $id)
     {
-        return IssueType::find($id);
+        $issue = IssueType::find($id);
+        if ($issue == null) return response()->json(['message' => 'Issue Type not found.'], Response::HTTP_NOT_FOUND);
+
+        return $issue;
     }
 
     /**
@@ -38,6 +41,8 @@ class IssueTypeController extends Controller
     public function update(IssueTypeRequest $request, string $id)
     {
         $issue = IssueType::find($id);
+        if ($issue == null) return response()->json(['message' => 'Issue Type not found.'], Response::HTTP_NOT_FOUND);
+
         $issue->update($request->safe()->all());
         return $issue;
     }

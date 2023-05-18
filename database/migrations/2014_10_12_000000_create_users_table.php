@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('Password');
             $table->timestamp('CreatedAt')->useCurrent();
             $table->enum('Role', ['student', 'professor', 'technician'])->default('student');
+            $table->boolean('IsActive')->default(true);
         });
     }
 

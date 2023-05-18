@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Enums\IssueStatus;
+
 class Issue extends Model
 {
     use HasFactory;
@@ -20,6 +22,9 @@ class Issue extends Model
         'SeatNo',
         'Description',
         'ReplicationSteps',
-        'Status'
+    ];
+
+    protected $casts = [
+        'Status' => IssueStatus::class
     ];
 }

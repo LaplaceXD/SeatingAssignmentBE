@@ -35,14 +35,15 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
             $table->foreignId('TypeID')
+                ->nullable()
                 ->constrained('IssueTypes', 'TypeID', 'issues_type_id')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
 
             $table->string('SeatNo', 4);
-            $table->text('Description');
+            $table->text('Description')->nullable();
             $table->text('ReplicationSteps');
-            $table->enum('Status', ['Raised', 'Validated', 'In Progress', 'Dropped', 'Fixed']);
+            $table->enum('Status', ['Raised', 'Validated', 'In Progress', 'Dropped', 'Fixed'])->default('Raised');
 
             $table->timestamp('IssuedAt')->useCurrent();
             $table->timestamp('ValidatedAt')->nullable();

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('Email', 256)->unique();
             $table->string('Password');
             $table->timestamp('CreatedAt')->useCurrent();
-            $table->enum('Role', ['Student', 'Professor', 'Technician'])->default('Student');
+            $table->enum('Role', ['student', 'professor', 'technician'])->default('student');
         });
     }
 

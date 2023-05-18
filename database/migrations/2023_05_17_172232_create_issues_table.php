@@ -43,7 +43,7 @@ return new class extends Migration
             $table->string('SeatNo', 4);
             $table->text('Description')->nullable();
             $table->text('ReplicationSteps');
-            $table->enum('Status', ['Raised', 'Validated', 'In Progress', 'Dropped', 'Fixed'])->default('Raised');
+            $table->enum('Status', ['raised', 'validated', 'in progress', 'dropped', 'fixed'])->default('raised');
 
             $table->timestamp('IssuedAt')->useCurrent();
             $table->timestamp('ValidatedAt')->nullable();

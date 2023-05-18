@@ -27,7 +27,7 @@ return new class extends Migration
             // Ex. Issue Created
             $table->text('Message');
 
-            $table->enum('ActionType', ['Change', 'Message']);
+            $table->enum('ActionType', ['change', 'message']);
             $table->timestamp('ExecutedAt')->useCurrent();
         });
     }

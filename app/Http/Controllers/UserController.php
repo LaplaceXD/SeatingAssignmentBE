@@ -50,7 +50,7 @@ class UserController extends Controller
         if (!Hash::check($fields['OldPassword'], $user->Password)) throw ValidationException::withMessages(['OldPassword' => 'Password incorrect.']);
 
         $user->update($request->safe()->only(['Password']));
-        return response(['message' => 'Password changed successfully.'], Response::HTTP_OK);
+        return ['message' => 'Password changed successfully.'];
     }
 
     /**

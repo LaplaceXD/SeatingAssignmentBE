@@ -20,13 +20,13 @@ class AuthController extends Controller
         $fields = $request->validated();
         $user = User::where('Email', $fields['Email'])->first();
         if (!$user || !$user->IsActive || !Hash::check($fields['Password'], $user->Password)) {
-            return response('Invalid Credentials', 400);
+            return response(['message' => 'Invalid Credentials'], 400);
         }
 
-        return response([
+        return [
             'User' => $user,
             'Token' => $user->createToken('secret')->plainTextToken
-        ]);
+        ];
     }
 
     public function logout(Request $request)

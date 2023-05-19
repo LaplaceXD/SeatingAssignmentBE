@@ -29,7 +29,7 @@ class UserController extends Controller
     public function show(string $id)
     {
         $user = User::find($id);
-        if ($user == null || !$user->IsActive) return response()->json(['message' => 'User not found.'], Response::HTTP_NOT_FOUND);
+        if (!$user || !$user->IsActive) return response()->json(['message' => 'User not found.'], Response::HTTP_NOT_FOUND);
 
         return $user;
     }
@@ -40,7 +40,7 @@ class UserController extends Controller
     public function update_details(UserDetailsRequest $request, string $id)
     {
         $user = User::find($id);
-        if ($user == null || !$user->IsActive) return response()->json(['message' => 'User not found.'], Response::HTTP_NOT_FOUND);
+        if (!$user || !$user->IsActive) return response()->json(['message' => 'User not found.'], Response::HTTP_NOT_FOUND);
 
         $user->update($request->safe()->all());
         return $user;
@@ -49,7 +49,7 @@ class UserController extends Controller
     public function change_password(ChangePasswordRequest $request, string $id)
     {
         $user = User::find($id);
-        if ($user == null || !$user->IsActive) return response()->json(['message' => 'User not found.'], Response::HTTP_NOT_FOUND);
+        if (!$user || !$user->IsActive) return response()->json(['message' => 'User not found.'], Response::HTTP_NOT_FOUND);
 
         $user->update($request->safe()->only(['Password']));
         return response()->json(['message' => 'Password changed successfully.'], Response::HTTP_OK);
@@ -62,7 +62,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        if ($user != null) {
+        if ($user) {
             $user->IsActive = false;
             $user->save();
         }

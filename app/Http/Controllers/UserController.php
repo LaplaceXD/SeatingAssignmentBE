@@ -29,7 +29,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update_details(UserDetailsRequest $request, string $id)
+    public function updateDetails(UserDetailsRequest $request, string $id)
     {
         $user = User::find($id);
         if (!$user || !$user->IsActive) return response(['message' => 'User not found.'], Response::HTTP_NOT_FOUND);
@@ -38,7 +38,7 @@ class UserController extends Controller
         return $user;
     }
 
-    public function change_password(ChangePasswordRequest $request, string $id)
+    public function changePassword(ChangePasswordRequest $request, string $id)
     {
         $user = User::find($id);
         if (!$user || !$user->IsActive) return response(['message' => 'User not found.'], Response::HTTP_NOT_FOUND);

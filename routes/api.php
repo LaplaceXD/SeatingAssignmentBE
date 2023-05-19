@@ -28,8 +28,8 @@ Route::prefix('users')->controller(UserController::class)->group(function () {
     Route::get('/', 'index');
     Route::get('{user}', 'show');
     Route::delete('{user}', 'destroy');
-    Route::match(['put', 'patch'], '{user}', 'update_details');
-    Route::match(['put', 'patch'], '{user}/password', 'change_password');
+    Route::match(['put', 'patch'], '{user}', 'updateDetails');
+    Route::match(['put', 'patch'], '{user}/password', 'changePassword');
 });
 
 Route::fallback(fn () => response(['message' => 'Resource not found.'], Response::HTTP_NOT_FOUND));

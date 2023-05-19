@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\IssueTypeController;
+use App\Http\Controllers\UserController;
 use Symfony\Component\HttpFoundation\Response;
 
 /*
@@ -19,10 +20,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 Route::resource('issues/types', IssueTypeController::class);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::resource('users', UserController::class);
+Route::prefix('users')->controller(UserController::class)->group(function () {
+    Route::match(['put', 'patch'], '{user}', 'update_details');
+    Route::match(['put', 'patch'], '{user}/password', 'change_password');
 });
 
-Route::fallback(function () {
-    return response()->json(['message' => 'Resource not found.'], Response::HTTP_NOT_FOUND);
-});
+Route::fallback(fn () => response()->json(['message' => 'Resource not found.'], Response::HTTP_NOT_FOUND));

@@ -18,20 +18,22 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::resource('issues/types', IssueTypeController::class);
-
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
     Route::middleware('auth:sanctum')->post('logout', 'logout');
 });
 
-Route::prefix('users')->controller(UserController::class)->group(function () {
-    Route::get('/', 'index');
-    Route::get('{user}', 'show');
-    Route::delete('{user}', 'destroy');
-    Route::match(['put', 'patch'], '{user}', 'updateDetails');
-    Route::match(['put', 'patch'], '{user}/password', 'changePassword');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('issues/types', IssueTypeController::class);
+
+    Route::prefix('users')->controller(UserController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('{user}', 'show');
+        Route::delete('{user}', 'destroy');
+        Route::match(['put', 'patch'], '{user}', 'updateDetails');
+        Route::match(['put', 'patch'], '{user}/password', 'changePassword');
+    });
 });
 
 Route::fallback(fn () => response(['message' => 'Resource not found.'], Response::HTTP_NOT_FOUND));

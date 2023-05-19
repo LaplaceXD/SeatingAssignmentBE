@@ -1,11 +1,10 @@
 <?php
 
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\IssueTypeController;
 use App\Http\Controllers\UserController;
-use Symfony\Component\HttpFoundation\Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,4 +25,4 @@ Route::prefix('users')->controller(UserController::class)->group(function () {
     Route::match(['put', 'patch'], '{user}/password', 'change_password');
 });
 
-Route::fallback(fn () => response()->json(['message' => 'Resource not found.'], Response::HTTP_NOT_FOUND));
+Route::fallback(fn () => response(['message' => 'Resource not found.'], Response::HTTP_NOT_FOUND));

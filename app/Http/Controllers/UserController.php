@@ -7,6 +7,8 @@ use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserDetailsRequest;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -40,8 +42,12 @@ class UserController extends Controller
 
     public function changePassword(ChangePasswordRequest $request, string $id)
     {
+        $fields = $request->validated();
+
         $user = User::find($id);
         if (!$user || !$user->IsActive) return response(['message' => 'User not found.'], Response::HTTP_NOT_FOUND);
+
+        if (!Hash::check($fields['OldPassword'], $user->Password)) throw ValidationException::withMessages(['OldPassword' => 'Password incorrect.']);
 
         $user->update($request->safe()->only(['Password']));
         return response(['message' => 'Password changed successfully.'], Response::HTTP_OK);

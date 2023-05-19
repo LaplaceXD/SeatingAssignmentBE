@@ -23,7 +23,7 @@ class ChangePasswordRequest extends UserDetailsRequest
     public function rules(): array
     {
         return [
-            'OldPassword' => ['required', 'string', 'current_password:api'],
+            'OldPassword' => ['required', 'string'],
             'Password' => array_merge(ChangePasswordRequest::password_validation(), ['different:OldPassword']),
             'ConfirmPassword' => ['required', 'string', 'same:Password']
         ];

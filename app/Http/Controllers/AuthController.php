@@ -6,6 +6,7 @@ use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -20,7 +21,7 @@ class AuthController extends Controller
         $fields = $request->validated();
         $user = User::where('Email', $fields['Email'])->first();
         if (!$user || !$user->IsActive || !Hash::check($fields['Password'], $user->Password)) {
-            return response(['message' => 'Invalid Credentials'], 400);
+            abort(Response::HTTP_BAD_REQUEST, 'Invalid credentials.');
         }
 
         return [

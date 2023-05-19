@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ChangePasswordRequest;
-use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserDetailsRequest;
 use App\Models\User;
 use Illuminate\Http\Response;
@@ -23,7 +22,7 @@ class UserController extends Controller
     public function show(string $id)
     {
         $user = User::find($id);
-        if (!$user || !$user->IsActive) return response(['message' => 'User not found.'], Response::HTTP_NOT_FOUND);
+        if (!$user || !$user->IsActive) abort(Response::HTTP_NOT_FOUND, 'User not found.');
 
         return $user;
     }
@@ -34,7 +33,7 @@ class UserController extends Controller
     public function updateDetails(UserDetailsRequest $request, string $id)
     {
         $user = User::find($id);
-        if (!$user || !$user->IsActive) return response(['message' => 'User not found.'], Response::HTTP_NOT_FOUND);
+        if (!$user || !$user->IsActive) abort(Response::HTTP_NOT_FOUND, 'User not found.');
 
         $user->update($request->safe()->all());
         return $user;
@@ -45,9 +44,8 @@ class UserController extends Controller
         $fields = $request->validated();
 
         $user = User::find($id);
-        if (!$user || !$user->IsActive) return response(['message' => 'User not found.'], Response::HTTP_NOT_FOUND);
-
-        if (!Hash::check($fields['OldPassword'], $user->Password)) throw ValidationException::withMessages(['OldPassword' => 'Password incorrect.']);
+        if (!$user || !$user->IsActive) abort(Response::HTTP_NOT_FOUND, 'User not found.');
+        else if (!Hash::check($fields['OldPassword'], $user->Password)) throw ValidationException::withMessages(['OldPassword' => 'Password incorrect.']);
 
         $user->update($request->safe()->only(['Password']));
         return ['message' => 'Password changed successfully.'];

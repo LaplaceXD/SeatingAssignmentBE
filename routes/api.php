@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\IssueTypeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +20,14 @@ use App\Http\Controllers\UserController;
 
 Route::resource('issues/types', IssueTypeController::class);
 
-Route::resource('users', UserController::class);
+Route::prefix('auth')->controller(AuthController::class)->group(function () {
+    Route::post('register', 'register');
+});
+
 Route::prefix('users')->controller(UserController::class)->group(function () {
+    Route::get('/', 'index');
+    Route::get('{user}', 'show');
+    Route::delete('{user}', 'destroy');
     Route::match(['put', 'patch'], '{user}', 'update_details');
     Route::match(['put', 'patch'], '{user}/password', 'change_password');
 });

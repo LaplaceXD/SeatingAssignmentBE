@@ -30,7 +30,7 @@ class IssueTypeController extends Controller
     public function show(string $id)
     {
         $issue = IssueType::find($id);
-        if (!$issue) abort(Response::HTTP_NOT_FOUND, 'Issue Type not found.');
+        abort_unless($issue, Response::HTTP_NOT_FOUND, 'Issue Type not found.');
 
         return $issue;
     }
@@ -41,7 +41,7 @@ class IssueTypeController extends Controller
     public function update(IssueTypeRequest $request, string $id)
     {
         $issue = IssueType::find($id);
-        if (!$issue) abort(Response::HTTP_NOT_FOUND, 'Issue Type not found.');
+        abort_unless($issue, Response::HTTP_NOT_FOUND, 'Issue Type not found.');
 
         $issue->update($request->safe()->all());
         return $issue;

@@ -20,9 +20,12 @@ class AuthController extends Controller
     {
         $fields = $request->validated();
         $user = User::where('Email', $fields['Email'])->first();
-        if (!$user || !$user->IsActive || !Hash::check($fields['Password'], $user->Password)) {
-            abort(Response::HTTP_BAD_REQUEST, 'Invalid credentials.');
-        }
+
+        abort_unless(
+            $user?->IsActive && Hash::check($fields['Password'], $user->Password),
+            Response::HTTP_BAD_REQUEST,
+            'Invalid credentials.'
+        );
 
         return [
             'User' => $user,

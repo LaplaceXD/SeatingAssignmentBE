@@ -49,4 +49,14 @@ class User extends Authenticatable
         'Password' => 'hashed',
         'Role' => UserType::class
     ];
+
+    public function isAdmin()
+    {
+        return in_array($this->Role, [UserType::Professor, UserType::Technician]);
+    }
+
+    public function roleLevel()
+    {
+        return UserType::getLevel($this->Role);
+    }
 }

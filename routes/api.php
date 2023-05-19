@@ -23,6 +23,7 @@ Route::resource('issues/types', IssueTypeController::class);
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
+    Route::middleware('auth:sanctum')->post('logout', 'logout');
 });
 
 Route::prefix('users')->controller(UserController::class)->group(function () {

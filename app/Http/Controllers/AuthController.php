@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -26,5 +27,11 @@ class AuthController extends Controller
             'User' => $user,
             'Token' => $user->createToken('secret')->plainTextToken
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+        return ['message' => 'Logout successful.'];
     }
 }

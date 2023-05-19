@@ -21,6 +21,7 @@ use App\Http\Controllers\AuthController;
 Route::resource('issues/types', IssueTypeController::class);
 
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
+    Route::post('login', 'login');
     Route::post('register', 'register');
 });
 

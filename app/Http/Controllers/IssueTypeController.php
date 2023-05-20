@@ -45,7 +45,7 @@ class IssueTypeController extends Controller
      */
     public function destroy(IssueType $type)
     {
-        IssueType::destroy($type->TypeID);
+        $type->delete();
 
         return ['message' => 'Issue Type successfully deleted.'];
     }

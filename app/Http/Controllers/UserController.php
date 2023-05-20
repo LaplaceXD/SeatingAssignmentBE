@@ -36,7 +36,7 @@ class UserController extends Controller
         abort_unless($user->IsActive, Response::HTTP_NOT_FOUND, 'User not found.');
 
         $user->update($request->safe()->all());
-        return $user;
+        return $user->refresh();
     }
 
     public function changePassword(ChangePasswordRequest $request, User $user)

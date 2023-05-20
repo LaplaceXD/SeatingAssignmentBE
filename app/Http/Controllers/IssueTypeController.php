@@ -37,7 +37,7 @@ class IssueTypeController extends Controller
     public function update(IssueTypeRequest $request, IssueType $type)
     {
         $type->update($request->safe()->all());
-        return $type;
+        return $type->refresh();
     }
 
     /**

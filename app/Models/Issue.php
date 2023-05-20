@@ -31,4 +31,9 @@ class Issue extends Model
     protected $casts = [
         'Status' => IssueStatus::class
     ];
+
+    public function isValidated()
+    {
+        return $this->ValidatedAt !== null;
+    }
 }

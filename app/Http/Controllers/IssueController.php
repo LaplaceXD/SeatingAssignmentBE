@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\IssueDetailsRequest;
 use App\Models\Issue;
+use App\Enums\IssueStatus;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Validation\Rules\Enum;
 
 class IssueController extends Controller
 {
@@ -46,6 +50,20 @@ class IssueController extends Controller
     {
         // todo add trail
         $issue->update($request->safe()->all());
+        return $issue->refresh();
+    }
+
+    public function validated(Request $request, Issue $issue)
+    {
+        // todo add trail
+        abort_unless($issue->isValidated(), Response::HTTP_BAD_REQUEST, 'Issue is already validated.');
+
+        $issue->update([
+            'ValidatorID' => $request->user()->UserID,
+            'ValidatedAt' => Carbon::now(),
+            'Status' => IssueStatus::Validated
+        ]);
+
         return $issue->refresh();
     }
 

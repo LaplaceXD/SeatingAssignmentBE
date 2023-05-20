@@ -10,4 +10,14 @@ enum IssueStatus: string
     case InProgress = 'in progress';
     case Dropped = 'dropped';
     case Fixed = 'fixed';
+
+    public static function postValidationCases(): array
+    {
+        return [
+            self::Pending->value,
+            self::InProgress->value,
+            self::Dropped->value,
+            self::Fixed->value
+        ];
+    }
 }

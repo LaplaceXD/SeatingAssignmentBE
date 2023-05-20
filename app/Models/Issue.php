@@ -36,4 +36,9 @@ class Issue extends Model
     {
         return $this->ValidatedAt !== null;
     }
+
+    public function isFrozen()
+    {
+        return in_array($this->Status, [IssueStatus::Dropped, IssueStatus::Fixed]);
+    }
 }

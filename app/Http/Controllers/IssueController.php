@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Validation\Rules\Enum;
 
 class IssueController extends Controller
 {
@@ -72,8 +71,9 @@ class IssueController extends Controller
      */
     public function destroy(Issue $issue)
     {
-        $issue->delete();
+        abort_if($issue->isFrozen(), Response::HTTP_BAD_REQUEST, 'Issue is already frozen.');
 
-        return ['message' => 'Issue deleted successfully.'];
+        $issue->update(['Status' => IssueStatus::Dropped]);
+        return ['message' => 'Issue dropped successfully.'];
     }
 }

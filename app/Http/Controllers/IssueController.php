@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\IssueCreateRequest;
 use App\Http\Requests\IssueDetailsRequest;
 use App\Models\Issue;
 use Illuminate\Database\Eloquent\Builder;

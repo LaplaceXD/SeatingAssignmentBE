@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class UserDetailsRequest extends FormRequest
@@ -29,9 +28,7 @@ class UserDetailsRequest extends FormRequest
             'Email' => [
                 'required', 'email', Rule::unique('users', 'Email')
                     ->ignore($this->route('user'), 'UserID')
-                    ->where(function ($query) {
-                        $query->where('Email', $this->Email);
-                    })
+                    ->where(fn ($query) => $query->where('Email', $this->Email))
             ],
         ];
     }

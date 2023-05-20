@@ -41,7 +41,7 @@ return new class extends Migration
                 ->nullOnDelete();
 
             $table->string('SeatNo', 4);
-            $table->text('Description')->nullable();
+            $table->text('Description')->default('');
             $table->text('ReplicationSteps');
             $table->enum('Status', ['raised', 'validated', 'in progress', 'dropped', 'fixed'])->default('raised');
 

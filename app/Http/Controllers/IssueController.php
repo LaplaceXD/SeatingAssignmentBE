@@ -58,7 +58,7 @@ class IssueController extends Controller
     {
         // todo add trail
         abort_if($issue->isFrozen(), Response::HTTP_BAD_REQUEST, 'Issue is already frozen.');
-        abort_unless($issue->isValidated(), Response::HTTP_BAD_REQUEST, 'Issue is already validated.');
+        abort_if($issue->isValidated(), Response::HTTP_BAD_REQUEST, 'Issue is already validated.');
 
         $issue->update([
             'ValidatorID' => $request->user()->UserID,

@@ -17,6 +17,10 @@ return new class extends Migration
                 ->constrained('Issues', 'IssueID', 'trails_issue_id')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+            $table->foreignId('ExecutorID')
+                ->constrained('Users', 'UserID', 'trails_executor_id')
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
 
             // Tracks the previous and current value of a field
             $table->string('FieldName', 64);

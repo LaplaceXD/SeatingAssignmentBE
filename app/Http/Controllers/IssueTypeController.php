@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\IssueType;
 use App\Http\Requests\IssueTypeRequest;
-use Illuminate\Http\Response;
 
 class IssueTypeController extends Controller
 {
@@ -27,31 +26,27 @@ class IssueTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(IssueType $type)
     {
-        $issue = IssueType::find($id);
-        abort_unless($issue, Response::HTTP_NOT_FOUND, 'Issue Type not found.');
-
-        return $issue;
+        return $type;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(IssueTypeRequest $request, string $id)
+    public function update(IssueTypeRequest $request, IssueType $type)
     {
-        $issue = IssueType::find($id);
-        abort_unless($issue, Response::HTTP_NOT_FOUND, 'Issue Type not found.');
-
-        $issue->update($request->safe()->all());
-        return $issue;
+        $type->update($request->safe()->all());
+        return $type;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(IssueType $type)
     {
-        return IssueType::destroy($id);
+        IssueType::destroy($type->TypeID);
+
+        return ['message' => 'Issue Type successfully deleted.'];
     }
 }

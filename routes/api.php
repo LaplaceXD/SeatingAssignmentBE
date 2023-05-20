@@ -25,7 +25,8 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('issues/types', IssueTypeController::class);
+    Route::resource('issues/types', IssueTypeController::class)
+        ->missing(fn () => abort(Response::HTTP_NOT_FOUND, 'Issue Type not found.'));
 
     Route::prefix('users')->controller(UserController::class)->group(function () {
         $notFound = fn () => abort(Response::HTTP_NOT_FOUND, 'User not found.');

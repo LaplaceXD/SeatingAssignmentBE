@@ -11,6 +11,7 @@ class Issue extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
     protected $primaryKey = 'IssueID';
 
     protected $fillable = [
@@ -22,6 +23,9 @@ class Issue extends Model
         'SeatNo',
         'Description',
         'ReplicationSteps',
+        'Status',
+        'ValidatedAt',
+        'CompletedAt'
     ];
 
     protected $casts = [

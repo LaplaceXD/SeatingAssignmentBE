@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IssueTypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\IssueController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,8 +26,19 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('issues/types', IssueTypeController::class)
-        ->missing(fn () => abort(Response::HTTP_NOT_FOUND, 'Issue Type not found.'));
+    Route::prefix('issues')->group(function () {
+        Route::controller(IssueController::class)->group(function () {
+            $notFound = fn () => abort(Response::HTTP_NOT_FOUND, 'Issue not found.');
+
+            Route::get('/', 'index');
+            Route::post('/', 'store');
+            Route::get('{issue}', 'show')->missing($notFound);
+            Route::put('{issue}', 'update')->missing($notFound);
+            Route::delete('{issue}', 'destroy')->missing($notFound);
+        });
+
+        Route::resource('types', IssueTypeController::class)->missing(fn () => abort(Response::HTTP_NOT_FOUND, 'Issue Type not found.'));
+    });
 
     Route::prefix('users')->controller(UserController::class)->group(function () {
         $notFound = fn () => abort(Response::HTTP_NOT_FOUND, 'User not found.');

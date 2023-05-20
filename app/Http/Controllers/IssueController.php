@@ -14,10 +14,10 @@ class IssueController extends Controller
      */
     public function index(Request $request)
     {
-        $q = $request->query();
+        $status = $request->query('Status');
 
         return Issue::query()
-            ->when(array_key_exists('Status', $q), fn (Builder $query) => $query->where('Status', $q['Status']))
+            ->when($status, fn (Builder $query) => $query->where('Status', $status))
             ->orderByDesc('IssuedAt')
             ->get();
     }

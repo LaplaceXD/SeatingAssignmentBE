@@ -33,9 +33,9 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/', 'index');
             Route::post('/', 'store');
             Route::get('{issue}', 'show')->missing($notFound);
-            Route::put('{issue}', 'update')->missing($notFound);
-            Route::delete('{issue}', 'destroy')->missing($notFound);
-            Route::post('{issue}/status', 'validated')->missing($notFound);
+            Route::put('{issue}', 'update')->can('ownerOrAdmin', 'issue')->missing($notFound);
+            Route::delete('{issue}', 'destroy')->can('admin', 'App\Models\Issue')->missing($notFound);
+            Route::post('{issue}/status', 'validated')->can('admin', 'App\Models\Issue')->missing($notFound);
         });
 
         Route::resource('types', IssueTypeController::class)->missing(fn () => abort(Response::HTTP_NOT_FOUND, 'Issue Type not found.'));

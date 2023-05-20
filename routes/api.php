@@ -28,12 +28,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('issues/types', IssueTypeController::class);
 
     Route::prefix('users')->controller(UserController::class)->group(function () {
-        Route::get('/', 'index');
-        Route::get('{user}', 'show');
-        Route::delete('{user}', 'destroy');
-        Route::match(['put', 'patch'], '{user}', 'updateDetails');
-        Route::match(['put', 'patch'], '{user}/password', 'changePassword');
+        $notFound = fn () => abort(Response::HTTP_NOT_FOUND, 'User not found.');
+
+        Route::get('/', 'index')->can('admin', 'App\Models\User');
+        Route::get('{user}', 'show')->can('ownerOrHigherRole', 'user')
+            ->missing($notFound);
+        Route::delete('{user}', 'destroy')->can('higherRole', 'user')
+            ->missing($notFound);
+        Route::match(['put', 'patch'], '{user}', 'updateDetails')->can('ownerOrHigherRole', 'user')
+            ->missing($notFound);
+        Route::match(['put', 'patch'], '{user}/password', 'changePassword')->can('owner', 'user')
+            ->missing($notFound);
     });
 });
 
-Route::fallback(fn () => response(['message' => 'Resource not found.'], Response::HTTP_NOT_FOUND));
+Route::fallback(fn () => abort(Response::HTTP_NOT_FOUND, 'Resource not found.'));

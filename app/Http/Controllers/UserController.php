@@ -15,19 +15,15 @@ class UserController extends Controller
 {
     public function index()
     {
-        if (!$this->authorize('admin', User::class)) throw new UnauthorizedException();
-
         return User::where('IsActive', true)->get();
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
-        $user = User::find($id);
-        abort_unless($user?->IsActive, Response::HTTP_NOT_FOUND, 'User not found.');
-        if (!$this->authorize('ownerOrHigherRole', $user)) throw new UnauthorizedException();
+        abort_unless($user->IsActive, Response::HTTP_NOT_FOUND, 'User not found.');
 
         return $user;
     }
@@ -35,21 +31,17 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function updateDetails(UserDetailsRequest $request, string $id)
+    public function updateDetails(UserDetailsRequest $request, User $user)
     {
-        $user = User::find($id);
-        abort_unless($user?->IsActive, Response::HTTP_NOT_FOUND, 'User not found.');
-        if (!$this->authorize('ownerOrHigherRole', $user)) throw new UnauthorizedException();
+        abort_unless($user->IsActive, Response::HTTP_NOT_FOUND, 'User not found.');
 
         $user->update($request->safe()->all());
         return $user;
     }
 
-    public function changePassword(ChangePasswordRequest $request, string $id)
+    public function changePassword(ChangePasswordRequest $request, User $user)
     {
-        $user = User::find($id);
-        abort_unless($user?->IsActive, Response::HTTP_NOT_FOUND, 'User not found.');
-        if (!$this->authorize('owner', $user)) throw new UnauthorizedException();
+        abort_unless($user->IsActive, Response::HTTP_NOT_FOUND, 'User not found.');
 
         $fields = $request->validated();
         if (!Hash::check($fields['OldPassword'], $user->Password)) {
@@ -63,16 +55,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        $user = User::find($id);
-
-        if ($user) {
-            if (!$this->authorize('higherRole', $user)) throw new UnauthorizedException();
-
-            $user->IsActive = false;
-            $user->save();
-        }
+        $user->IsActive = false;
+        $user->save();
 
         return ['message' => 'User deleted successfully.'];
     }

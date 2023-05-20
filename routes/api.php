@@ -32,14 +32,10 @@ Route::middleware('auth:sanctum')->group(function () {
         $notFound = fn () => abort(Response::HTTP_NOT_FOUND, 'User not found.');
 
         Route::get('/', 'index')->can('admin', 'App\Models\User');
-        Route::get('{user}', 'show')->can('ownerOrHigherRole', 'user')
-            ->missing($notFound);
-        Route::delete('{user}', 'destroy')->can('higherRole', 'user')
-            ->missing($notFound);
-        Route::match(['put', 'patch'], '{user}', 'updateDetails')->can('ownerOrHigherRole', 'user')
-            ->missing($notFound);
-        Route::match(['put', 'patch'], '{user}/password', 'changePassword')->can('owner', 'user')
-            ->missing($notFound);
+        Route::get('{user}', 'show')->can('ownerOrHigherRole', 'user')->missing($notFound);
+        Route::delete('{user}', 'destroy')->can('higherRole', 'user')->missing($notFound);
+        Route::put('{user}', 'updateDetails')->can('ownerOrHigherRole', 'user')->missing($notFound);
+        Route::put('{user}/password', 'changePassword')->can('owner', 'user')->missing($notFound);
     });
 });
 

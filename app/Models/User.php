@@ -5,12 +5,13 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 use App\Enums\UserType;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
@@ -50,6 +51,21 @@ class User extends Authenticatable
         'Password' => 'hashed',
         'Role' => UserType::class
     ];
+
+    public function issues(): HasMany
+    {
+        return $this->hasMany(Issue::class, 'IssuerID');
+    }
+
+    public function validatedIssues(): HasMany
+    {
+        return $this->hasMany(Issue::class, 'ValidatorID');
+    }
+
+    public function assignedIssues(): HasMany
+    {
+        return $this->hasMany(Issue::class, 'AssigneeID');
+    }
 
     protected function isAdmin(): Attribute
     {

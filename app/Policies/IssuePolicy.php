@@ -20,6 +20,6 @@ class IssuePolicy
 
     public function ownerOrAdmin(User $user, Issue $issue): bool
     {
-        return $user->UserID === $issue->IssuerID || $this->admin($user);
+        return $issue->issuer()->is($user) || $this->admin($user);
     }
 }

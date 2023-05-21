@@ -8,7 +8,6 @@ use App\Http\Requests\ChangePasswordRequest;
 
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id('IssueID');
 
             $table->foreignId('IssuerID')
+                ->nullable()
                 ->constrained('Users', 'UserID', 'issues_issuer_id')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
@@ -31,6 +32,7 @@ return new class extends Migration
                 ->nullOnDelete();
 
             $table->foreignId('LabID')
+                ->nullable()
                 ->constrained('Laboratories', 'LabID', 'issues_lab_id')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();

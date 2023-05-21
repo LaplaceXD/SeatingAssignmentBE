@@ -18,6 +18,7 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
             $table->foreignId('ExecutorID')
+                ->nullable()
                 ->constrained('Users', 'UserID', 'trails_executor_id')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();

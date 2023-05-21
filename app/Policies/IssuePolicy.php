@@ -15,7 +15,7 @@ class IssuePolicy
 
     public function admin(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin;
     }
 
     public function ownerOrAdmin(User $user, Issue $issue): bool

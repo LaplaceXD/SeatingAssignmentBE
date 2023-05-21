@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 use App\Enums\UserType;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
@@ -50,13 +51,17 @@ class User extends Authenticatable
         'Role' => UserType::class
     ];
 
-    public function isAdmin()
+    protected function isAdmin(): Attribute
     {
-        return in_array($this->Role, [UserType::Professor, UserType::Technician]);
+        return Attribute::make(
+            get: fn () => in_array($this->Role, [UserType::Professor, UserType::Technician])
+        );
     }
 
-    public function roleLevel()
+    protected function roleLevel(): Attribute
     {
-        return UserType::getLevel($this->Role);
+        return Attribute::make(
+            get: fn () => UserType::getLevel($this->Role)
+        );
     }
 }

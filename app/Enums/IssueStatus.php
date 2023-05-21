@@ -14,10 +14,18 @@ enum IssueStatus: string
     public static function postValidationCases(): array
     {
         return [
-            self::Pending->value,
-            self::InProgress->value,
-            self::Dropped->value,
-            self::Fixed->value
+            self::Pending,
+            self::InProgress,
+            self::Dropped,
+            self::Fixed
+        ];
+    }
+
+    public static function completedCases(): array
+    {
+        return [
+            self::Dropped,
+            self::Fixed
         ];
     }
 }

@@ -77,8 +77,8 @@ class IssueController extends Controller
         $fields = $request->safe()->all();
         if (
             array_key_exists('Status', $fields) && $fields['Status']
-            && in_array($fields['Status'], [IssueStatus::Dropped->value, IssueStatus::Fixed->value])
-            && !in_array($issue->Status, [IssueStatus::Dropped, IssueStatus::Fixed])
+            && in_array(IssueStatus::from($fields['Status']), IssueStatus::completedCases())
+            && !in_array($issue->Status, IssueStatus::completedCases())
         ) {
             $fields['CompletedAt'] = Carbon::now();
         }

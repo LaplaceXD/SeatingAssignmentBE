@@ -34,7 +34,9 @@ class IssueProgressRequest extends FormRequest
             'Status' => [
                 'required_without_all:AssigneeID',
                 'filled',
-                Rule::in(IssueStatus::postValidationCases())
+                Rule::in(array_map(function (IssueStatus $status) {
+                    return $status->value;
+                }, IssueStatus::postValidationCases()))
             ]
         ];
     }

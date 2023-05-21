@@ -28,7 +28,7 @@ class UserDetailsRequest extends FormRequest
             'Email' => [
                 'required', 'email', Rule::unique('Users', 'Email')
                     ->ignore($this->route('user'), 'UserID')
-                    ->where(fn ($query) => $query->where('Email', $this->Email))
+                    ->where('Email', $this->Email)
             ],
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\IssueType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class IssueTypeFactory extends Factory
 {
+    protected $model = IssueType::class;
+
     /**
      * Define the model's default state.
      *

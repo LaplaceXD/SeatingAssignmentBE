@@ -20,7 +20,7 @@ class IssueTypeController extends Controller
      */
     public function store(IssueTypeRequest $request)
     {
-        return IssueType::create($request->safe()->all());
+        return IssueType::create($request->safe()->all())->fresh();
     }
 
     /**

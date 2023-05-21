@@ -13,7 +13,7 @@ class AuthController extends Controller
 {
     public function register(UserCreateRequest $request)
     {
-        return User::create($request->safe()->all());
+        return User::create($request->safe()->all())->fresh();
     }
 
     public function login(UserLoginRequest $request)

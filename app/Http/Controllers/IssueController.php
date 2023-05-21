@@ -32,7 +32,7 @@ class IssueController extends Controller
     public function store(IssueDetailsRequest $request)
     {
         // todo add trail
-        return Issue::create(array_merge(['IssuerID' => $request->user()->UserID], $request->safe()->all()));
+        return Issue::create(array_merge(['IssuerID' => $request->user()->UserID], $request->safe()->all()))->fresh();
     }
 
     /**

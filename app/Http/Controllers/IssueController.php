@@ -77,8 +77,8 @@ class IssueController extends Controller
         $fields = $request->safe()->all();
         if (
             array_key_exists('Status', $fields) && $fields['Status']
-            && $fields['Status'] === IssueStatus::Fixed->value
-            && $issue->Status !== IssueStatus::Fixed
+            && in_array($fields['Status'], [IssueStatus::Dropped->value, IssueStatus::Fixed->value])
+            && !in_array($issue->Status, [IssueStatus::Dropped, IssueStatus::Fixed])
         ) {
             $fields['CompletedAt'] = Carbon::now();
         }
@@ -94,7 +94,11 @@ class IssueController extends Controller
     {
         abort_if($issue->isFrozen, Response::HTTP_BAD_REQUEST, 'Issue is already frozen.');
 
-        $issue->update(['Status' => IssueStatus::Dropped]);
+        $issue->update([
+            'Status' => IssueStatus::Dropped,
+            'CompletedAt' => Carbon::now()
+        ]);
+
         return ['message' => 'Issue dropped successfully.'];
     }
 }

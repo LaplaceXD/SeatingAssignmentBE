@@ -29,7 +29,7 @@ class AuthController extends Controller
 
         return [
             'User' => $user,
-            'Token' => $user->createToken('secret')->plainTextToken
+            'Token' => $user->createToken(env('APP_TOKEN_SECRET', 'secret'))->plainTextToken
         ];
     }
 

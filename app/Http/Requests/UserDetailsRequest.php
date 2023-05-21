@@ -23,8 +23,8 @@ class UserDetailsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'FirstName' => ['required', 'string', 'between:2,256'],
-            'LastName' => ['required', 'string', 'between:2,256'],
+            'FirstName' => ['required', 'string', 'alpha_dash:ascii', 'between:2,256'],
+            'LastName' => ['required', 'string', 'alpha_dash:ascii', 'between:2,256'],
             'Email' => [
                 'required', 'email', Rule::unique('Users', 'Email')
                     ->ignore($this->route('user'), 'UserID')

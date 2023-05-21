@@ -24,7 +24,7 @@ class IssueDetailsRequest extends FormRequest
         return [
             'LabID' => ['required', 'numeric', 'exists:Laboratories,LabID'],
             'TypeID' => ['nullable', 'numeric', 'exists:IssueTypes,TypeID'],
-            'SeatNo' => ['required', 'string', 'between:1,4'],
+            'SeatNo' => ['required', 'string', 'alpha_num:ascii', 'between:1,4'],
             'Description' => ['string', 'max:1024'],
             'ReplicationSteps' => ['required', 'string'],
         ];

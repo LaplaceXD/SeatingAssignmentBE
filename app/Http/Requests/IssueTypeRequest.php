@@ -22,7 +22,7 @@ class IssueTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "Name" => ["required", "filled", "string", "between:1,48"]
+            'Name' => ['required', 'string', 'alpha_dash:ascii', 'between:1,48']
         ];
     }
 }

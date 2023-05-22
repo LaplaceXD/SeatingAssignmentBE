@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 use App\Enums\IssueEvent;
 use App\Enums\IssueStatus;
+use App\Enums\UserRole;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
@@ -182,6 +183,30 @@ class Issue extends Model
         $this->update($attributes);
         $this->fireModelEvent(IssueEvent::DetailsUpdated->value);
 
+        return $this;
+    }
+
+    public function setAssignee(?User $user)
+    {
+        if (!$this->isValidated) throw new Exception('This issue is not yet validated.');
+        if ($user && $user->Role !== UserRole::Technician) throw new Exception('The user provided is not valid.');
+
+        $this->assignee()->associate($user);
+        $this->fireModelEvent(IssueEvent::Assigned->value);
+
+        return $this;
+    }
+
+    public function setStatus(IssueStatus $status)
+    {
+        if (in_array($status, IssueStatus::completedCases()) && !$this->isCompleted) {
+            $this->CompletedAt = Carbon::now();
+        }
+
+        $this->Status = $status;
+        $this->save();
+
+        $this->fireModelEvent(IssueEvent::StatusChanged->value);
         return $this;
     }
 }

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\UserType;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -13,13 +14,13 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(3)->create(['Role' => UserType::Student]);
-        User::factory(1)->create(['Email' => 'student@example.com', 'Role' => UserType::Student]);
-
-        User::factory(1)->create(['Role' => UserType::Professor]);
-        User::factory(1)->create(['Email' => 'professor@example.com', 'Role' => UserType::Professor]);
-
-        User::factory(1)->create(['Role' => UserType::Technician]);
-        User::factory(1)->create(['Email' => 'technician@example.com', 'Role' => UserType::Technician]);
+        foreach (UserType::cases() as $role) {
+            User::factory()
+                ->count(5)
+                ->sequence(fn (Sequence $sequence) => [
+                    'Email' => $role->value . ($sequence->index === 0 ? '' : $sequence->index) . '@example.com',
+                ])
+                ->create(['Role' => $role]);
+        }
     }
 }

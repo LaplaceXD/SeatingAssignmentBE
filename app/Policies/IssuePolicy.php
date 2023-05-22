@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\UserType;
+use App\Enums\UserRole;
 use App\Models\Issue;
 use App\Models\User;
 
@@ -10,7 +10,7 @@ class IssuePolicy
 {
     public function technician(User $user): bool
     {
-        return $user->Role === UserType::Technician;
+        return $user->Role === UserRole::Technician;
     }
 
     public function admin(User $user): bool

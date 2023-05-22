@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\IssueStatus;
-use App\Enums\UserType;
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -29,7 +29,7 @@ class IssueProgressRequest extends FormRequest
             'AssigneeID' => [
                 'required_without_all:Status',
                 'filled', 'nullable', 'numeric',
-                Rule::exists('Users', 'UserID')->where('Role', UserType::Technician->value)
+                Rule::exists('Users', 'UserID')->where('Role', UserRole::Technician->value)
             ],
             'Status' => [
                 'required_without_all:AssigneeID',

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enums\UserType;
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach (UserType::cases() as $role) {
+        foreach (UserRole::cases() as $role) {
             User::factory()
                 ->count(5)
                 ->sequence(fn (Sequence $sequence) => [

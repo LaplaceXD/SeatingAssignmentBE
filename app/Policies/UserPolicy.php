@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\UserRole;
 use App\Models\User;
 
 class UserPolicy
@@ -18,7 +19,7 @@ class UserPolicy
 
     public function higherRole(User $auth, User $user): bool
     {
-        return $auth->roleLevel > $user->roleLevel;
+        return $auth->Role->level() > $user->Role->level();
     }
 
     public function ownerOrHigherRole(User $auth, User $user): bool

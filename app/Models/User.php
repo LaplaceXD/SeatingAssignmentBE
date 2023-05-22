@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-use App\Enums\UserType;
+use App\Enums\UserRole;
 
 class User extends Authenticatable
 {
@@ -49,7 +49,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'Password' => 'hashed',
-        'Role' => UserType::class
+        'Role' => UserRole::class
     ];
 
     public function issues(): HasMany
@@ -70,14 +70,7 @@ class User extends Authenticatable
     protected function isAdmin(): Attribute
     {
         return Attribute::make(
-            get: fn () => in_array($this->Role, [UserType::Professor, UserType::Technician])
-        );
-    }
-
-    protected function roleLevel(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => UserType::getLevel($this->Role)
+            get: fn () => in_array($this->Role, [UserRole::Professor, UserRole::Technician])
         );
     }
 }

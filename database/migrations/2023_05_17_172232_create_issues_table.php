@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -45,8 +44,7 @@ return new class extends Migration
             $table->string('SeatNo', 4);
             $table->text('Description')->default('');
             $table->text('ReplicationSteps');
-            $table->enum('Status', ['raised', 'validated', 'pending', 'in progress', 'dropped', 'fixed'])
-                ->default('raised');
+            $table->enum('Status', ['pending', 'in progress', 'dropped', 'fixed'])->nullable();
 
             $table->timestamp('IssuedAt')->useCurrent();
             $table->timestamp('ValidatedAt')->nullable();

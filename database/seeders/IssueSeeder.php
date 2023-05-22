@@ -42,22 +42,16 @@ class IssueSeeder extends Seeder
                 ];
                 $coinFlip = rand(0, 1);
 
-                // Accounts for cases wherein issues are stuck in raised
-                // or was immediately dropped due to not being replicable
-                if (
-                    $state['Status'] === IssueStatus::Raised
-                    || ($state['Status'] === IssueStatus::Dropped && $coinFlip === 1)
-                ) {
+                // Accounts for cases wherein issues are stuck in raised (20% chance)
+                // or was immediately dropped due to not being replicable (50% chance if status is dropped)
+                if (rand(1, 5) === 1 || ($state['Status'] === IssueStatus::Dropped && $coinFlip === 1)) {
                     $state['ValidatorID'] = null;
+                    $state['Status'] = null;
                 }
 
-                // Accounts for cases that are post validated, as well as pending cases that do not have
-                // an assigned personnel
-                if (
-                    in_array($state['Status'], IssueStatus::postValidatedCases())
-                    && $state['Status'] !== IssueStatus::Raised && $state['ValidatorID'] !== null
-                    || $state['Status'] === IssueStatus::Raised && $coinFlip === 1
-                ) {
+                // Accounts for cases that are post validated (75 %), as well as pending cases that do not have
+                // an assigned personnel (25 %)
+                if ($state['ValidatorID'] !== null && rand(1, 4) > 1) {
                     $state['AssigneeID'] = $technicians->random(1)->first()->UserID;
                 }
 

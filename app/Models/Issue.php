@@ -99,7 +99,7 @@ class Issue extends Model
     protected function isValidated(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->ValidatedAt !== null
+            get: fn () => $this->ValidatedAt !== null && $this->ValidatorID !== null
         );
     }
 
@@ -110,16 +110,17 @@ class Issue extends Model
         );
     }
 
-    public function scopeOfStatus(Builder $query, ?IssueStatus $status): void
+    public function scopeOfStatus(Builder $query, ?IssueStatus $status, bool $validatedOnly): void
     {
         $query
+            ->when($validatedOnly, fn (Builder $query) => $query->whereNot('Status', null))
             ->when($status, fn (Builder $query) => $query->where('Status', $status->value))
             ->when(
                 in_array($status, IssueStatus::completedCases()),
                 fn (Builder $query) => $query->orderByDesc('CompletedAt')
             )
             ->when(
-                in_array($status, array_merge(IssueStatus::postValidatedCases(), [IssueStatus::Validated])),
+                in_array($status, IssueStatus::cases()) || $validatedOnly,
                 fn (Builder $query) => $query->orderByDesc('ValidatedAt')
             )
             ->orderByDesc('IssuedAt');
@@ -162,7 +163,6 @@ class Issue extends Model
         $this->update([
             'ValidatorID' => $user->UserID,
             'ValidatedAt' => Carbon::now(),
-            'Status' => IssueStatus::Validated
         ]);
 
         $this->fireModelEvent(IssueEvent::Validated->value);

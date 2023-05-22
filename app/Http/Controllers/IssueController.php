@@ -18,8 +18,9 @@ class IssueController extends Controller
     public function index(Request $request)
     {
         $status = $request->query('Status');
+        $validatedOnly = $request->query('Validated');
 
-        return Issue::ofStatus(IssueStatus::tryFrom($status))->get();
+        return Issue::ofStatus(IssueStatus::tryFrom($status), boolval($validatedOnly))->get();
     }
 
     /**

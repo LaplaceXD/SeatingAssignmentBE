@@ -21,14 +21,21 @@ class LaboratoryController extends Controller
     public function getIssues(Request $request, Laboratory $laboratory)
     {
         $status = $request->query('Status');
+        $validatedOnly = $request->query('Validated');
 
-        return $laboratory->issues()->ofStatus(IssueStatus::tryFrom($status))->get();
+        return $laboratory->issues()
+            ->ofStatus(IssueStatus::tryFrom($status), boolval($validatedOnly))
+            ->get();
     }
 
     public function getSeatIssues(Request $request, Laboratory $laboratory, string $seat)
     {
         $status = $request->query('Status');
+        $validatedOnly = $request->query('Validated');
 
-        return $laboratory->issues()->ofSeat($seat)->ofStatus(IssueStatus::tryFrom($status))->get();
+        return $laboratory->issues()
+            ->ofSeat($seat)
+            ->ofStatus(IssueStatus::tryFrom($status), boolval($validatedOnly))
+            ->get();
     }
 }

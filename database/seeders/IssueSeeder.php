@@ -54,7 +54,7 @@ class IssueSeeder extends Seeder
                 // Accounts for cases that are post validated, as well as pending cases that do not have
                 // an assigned personnel
                 if (
-                    in_array($state['Status'], IssueStatus::postValidationCases())
+                    in_array($state['Status'], IssueStatus::postValidatedCases())
                     && $state['Status'] !== IssueStatus::Raised && $state['ValidatorID'] !== null
                     || $state['Status'] === IssueStatus::Raised && $coinFlip === 1
                 ) {

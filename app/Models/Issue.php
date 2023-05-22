@@ -116,7 +116,7 @@ class Issue extends Model
                 fn (Builder $query) => $query->orderByDesc('CompletedAt')
             )
             ->when(
-                in_array($status, array_merge(IssueStatus::postValidationCases(), [IssueStatus::Validated])),
+                in_array($status, array_merge(IssueStatus::postValidatedCases(), [IssueStatus::Validated])),
                 fn (Builder $query) => $query->orderByDesc('ValidatedAt')
             )
             ->orderByDesc('IssuedAt');

@@ -11,7 +11,7 @@ enum IssueStatus: string
     case Dropped = 'dropped';
     case Fixed = 'fixed';
 
-    public static function postValidationCases(): array
+    public static function postValidatedCases(): array
     {
         return [
             self::Pending,

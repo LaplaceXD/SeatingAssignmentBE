@@ -35,7 +35,7 @@ class IssueProgressRequest extends FormRequest
                 'filled',
                 Rule::in(array_map(function (IssueStatus $status) {
                     return $status->value;
-                }, IssueStatus::postValidationCases()))
+                }, IssueStatus::postValidatedCases()))
             ]
         ];
     }

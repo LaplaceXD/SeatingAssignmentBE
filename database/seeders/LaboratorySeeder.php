@@ -12,6 +12,6 @@ class LaboratorySeeder extends Seeder
      */
     public function run(): void
     {
-        Laboratory::factory(4)->create(['LabName' => 'Computer Laboratory']);
+        Laboratory::factory()->count(4)->create();
     }
 }

@@ -16,6 +16,7 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\UnauthorizedException;
+use InvalidArgumentException;
 
 class Issue extends Model
 {
@@ -124,6 +125,25 @@ class Issue extends Model
     public function scopeOfSeat(Builder $query, string $seat): void
     {
         $query->where('SeatNo', strtoupper($seat));
+    }
+
+    public static function raise(array $attributes)
+    {
+        $validFields = ['LabID', 'TypeID', 'SeatNo', 'Description', 'ReplicationSteps'];
+        $diff = array_diff(array_keys($attributes), $validFields);
+
+        if (count($diff) !== 0)
+            throw new InvalidArgumentException('Array must only contain the following keys: ' . implode(',', $validFields));
+
+        $user = Auth::user();
+        if (!$user || !$user->IsActive) throw new AuthenticationException('There is no user logged in.');
+
+        $attributes['IssuerID'] = $user->UserID;
+
+        $issue = self::create($attributes);
+        $issue->fireModelEvent(IssueEvent::Raised->value);
+
+        return $issue->fresh();
     }
 
     public function validate()

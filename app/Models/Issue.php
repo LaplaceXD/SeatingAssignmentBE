@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
-use App\Enums\IssueStatus;
 use Illuminate\Database\Eloquent\Builder;
+
+use App\Enums\IssueEvent;
+use App\Enums\IssueStatus;
 
 class Issue extends Model
 {
@@ -34,6 +35,14 @@ class Issue extends Model
 
     protected $casts = [
         'Status' => IssueStatus::class
+    ];
+
+    protected $dispatchesEvents = [
+        IssueEvent::Raised->value => \App\Events\IssueRaised::class,
+        IssueEvent::Validated->value => \App\Events\IssueValidated::class,
+        IssueEvent::DetailsUpdated->value => \App\Events\IssueDetailsUpdated::class,
+        IssueEvent::Assigned->value => \App\Events\IssueAssigned::class,
+        IssueEvent::StatusChanged->value => \App\Events\IssueStatusChanged::class
     ];
 
     public function issuer(): BelongsTo

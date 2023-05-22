@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Enums\IssueStatus;
+use Illuminate\Database\Eloquent\Builder;
 
 class Issue extends Model
 {
@@ -89,5 +90,20 @@ class Issue extends Model
         return Attribute::make(
             get: fn () => in_array($this->Status, [IssueStatus::Dropped, IssueStatus::Fixed])
         );
+    }
+
+    public function scopeOfStatus(Builder $query, ?IssueStatus $status): void
+    {
+        $query
+            ->when($status, fn (Builder $query) => $query->where('Status', $status->value))
+            ->when(
+                in_array($status, IssueStatus::completedCases()),
+                fn (Builder $query) => $query->orderByDesc('CompletedAt')
+            )
+            ->when(
+                in_array($status, array_merge(IssueStatus::postValidationCases(), [IssueStatus::Validated])),
+                fn (Builder $query) => $query->orderByDesc('ValidatedAt')
+            )
+            ->orderByDesc('IssuedAt');
     }
 }

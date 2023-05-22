@@ -20,10 +20,7 @@ class IssueController extends Controller
     {
         $status = $request->query('Status');
 
-        return Issue::query()
-            ->when($status, fn (Builder $query) => $query->where('Status', $status))
-            ->orderByDesc('IssuedAt')
-            ->get();
+        return Issue::ofStatus(IssueStatus::tryFrom($status))->get();
     }
 
     /**

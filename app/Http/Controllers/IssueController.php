@@ -58,7 +58,7 @@ class IssueController extends Controller
         abort_if($issue->isCompleted, Response::HTTP_BAD_REQUEST, 'Issue is already frozen.');
         abort_if($issue->isValidated, Response::HTTP_BAD_REQUEST, 'Issue is already validated.');
 
-        return $issue->validated()->refresh();
+        return $issue->validate()->refresh();
     }
 
     public function updateProgress(IssueProgressRequest $request, Issue $issue)

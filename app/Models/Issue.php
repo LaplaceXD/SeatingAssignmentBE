@@ -126,7 +126,7 @@ class Issue extends Model
         $query->where('SeatNo', strtoupper($seat));
     }
 
-    public function validated()
+    public function validate()
     {
         if ($this->isValidated) throw new Exception('This issue is already validated.');
 

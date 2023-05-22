@@ -106,4 +106,9 @@ class Issue extends Model
             )
             ->orderByDesc('IssuedAt');
     }
+
+    public function scopeOfSeat(Builder $query, string $seat): void
+    {
+        $query->where('SeatNo', strtoupper($seat));
+    }
 }

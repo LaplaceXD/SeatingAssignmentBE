@@ -7,6 +7,7 @@ use App\Http\Controllers\IssueTypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IssueController;
+use App\Http\Controllers\LaboratoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,17 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('laboratories')->controller(LaboratoryController::class)->group(function () {
+        $notFound = fn () => abort(Response::HTTP_NOT_FOUND, 'Laboratory not found.');
+
+        Route::get('/', 'index');
+        Route::get('{laboratory}', 'show')->missing($notFound);
+        Route::get('{laboratory}/issues', 'getIssues')->missing($notFound);
+        Route::get('{laboratory}/seats/{seat}/issues', 'getSeatIssues')
+            ->where('seat', '[A-Za-z0-9]+')
+            ->missing($notFound);
+    });
+
     Route::prefix('issues')->group(function () {
         Route::controller(IssueController::class)->group(function () {
             $notFound = fn () => abort(Response::HTTP_NOT_FOUND, 'Issue not found.');

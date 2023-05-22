@@ -46,7 +46,7 @@ class IssueController extends Controller
     public function update(IssueDetailsRequest $request, Issue $issue)
     {
         // todo add trail
-        abort_if($issue->isFrozen, Response::HTTP_BAD_REQUEST, 'Issue is already frozen.');
+        abort_if($issue->isCompleted, Response::HTTP_BAD_REQUEST, 'Issue is already frozen.');
 
         $issue->update($request->safe()->all());
         return $issue->refresh();
@@ -55,7 +55,7 @@ class IssueController extends Controller
     public function validated(Issue $issue)
     {
         // todo add trail
-        abort_if($issue->isFrozen, Response::HTTP_BAD_REQUEST, 'Issue is already frozen.');
+        abort_if($issue->isCompleted, Response::HTTP_BAD_REQUEST, 'Issue is already frozen.');
         abort_if($issue->isValidated, Response::HTTP_BAD_REQUEST, 'Issue is already validated.');
 
         return $issue->validated()->refresh();
@@ -83,7 +83,7 @@ class IssueController extends Controller
      */
     public function destroy(Issue $issue)
     {
-        abort_if($issue->isFrozen, Response::HTTP_BAD_REQUEST, 'Issue is already frozen.');
+        abort_if($issue->isCompleted, Response::HTTP_BAD_REQUEST, 'Issue is already frozen.');
 
         $issue->update([
             'Status' => IssueStatus::Dropped,

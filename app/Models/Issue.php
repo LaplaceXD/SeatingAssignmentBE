@@ -99,7 +99,7 @@ class Issue extends Model
         );
     }
 
-    protected function isFrozen(): Attribute
+    protected function isCompleted(): Attribute
     {
         return Attribute::make(
             get: fn () => in_array($this->Status, [IssueStatus::Dropped, IssueStatus::Fixed])

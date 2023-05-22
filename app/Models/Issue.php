@@ -70,6 +70,13 @@ class Issue extends Model
         return $this->hasMany(Image::class, 'IssueID');
     }
 
+    protected function seatNo(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => strtoupper($value)
+        );
+    }
+
     protected function isValidated(): Attribute
     {
         return Attribute::make(

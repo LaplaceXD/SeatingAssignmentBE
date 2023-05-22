@@ -11,6 +11,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 use App\Enums\IssueEvent;
 use App\Enums\IssueStatus;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\UnauthorizedException;
 
 class Issue extends Model
 {
@@ -119,5 +124,24 @@ class Issue extends Model
     public function scopeOfSeat(Builder $query, string $seat): void
     {
         $query->where('SeatNo', strtoupper($seat));
+    }
+
+    public function validated()
+    {
+        if ($this->isValidated) throw new Exception('This issue is already validated.');
+
+        $user = Auth::user();
+        if (!$user) throw new AuthenticationException('There is no user logged in.');
+        if (!$user->isAdmin) throw new UnauthorizedException('Current logged in user is not an admin.');
+
+        $this->update([
+            'ValidatorID' => $user->UserID,
+            'ValidatedAt' => Carbon::now(),
+            'Status' => IssueStatus::Validated
+        ]);
+
+        $this->fireModelEvent(IssueEvent::Validated->value);
+
+        return $this;
     }
 }

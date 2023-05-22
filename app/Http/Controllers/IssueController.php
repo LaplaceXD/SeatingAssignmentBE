@@ -52,19 +52,13 @@ class IssueController extends Controller
         return $issue->refresh();
     }
 
-    public function validated(Request $request, Issue $issue)
+    public function validated(Issue $issue)
     {
         // todo add trail
         abort_if($issue->isFrozen, Response::HTTP_BAD_REQUEST, 'Issue is already frozen.');
         abort_if($issue->isValidated, Response::HTTP_BAD_REQUEST, 'Issue is already validated.');
 
-        $issue->update([
-            'ValidatorID' => $request->user()->UserID,
-            'ValidatedAt' => Carbon::now(),
-            'Status' => IssueStatus::Validated
-        ]);
-
-        return $issue->refresh();
+        return $issue->validated()->refresh();
     }
 
     public function updateProgress(IssueProgressRequest $request, Issue $issue)

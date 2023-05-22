@@ -22,6 +22,8 @@ class Issue extends Model
 {
     use HasFactory;
 
+    public static $updatableFields = ['LabID', 'TypeID', 'SeatNo', 'Description', 'ReplicationSteps'];
+
     public $timestamps = false;
     protected $primaryKey = 'IssueID';
 
@@ -129,11 +131,13 @@ class Issue extends Model
 
     public static function raise(array $attributes)
     {
-        $validFields = ['LabID', 'TypeID', 'SeatNo', 'Description', 'ReplicationSteps'];
-        $diff = array_diff(array_keys($attributes), $validFields);
+        $diff = array_diff(array_keys($attributes), self::$updatableFields);
 
-        if (count($diff) !== 0)
-            throw new InvalidArgumentException('Array must only contain the following keys: ' . implode(',', $validFields));
+        if (count($diff) !== 0) {
+            throw new InvalidArgumentException(
+                'Array must only contain the following keys: ' . implode(',', self::$updatableFields)
+            );
+        }
 
         $user = Auth::user();
         if (!$user || !$user->IsActive) throw new AuthenticationException('There is no user logged in.');
@@ -161,6 +165,22 @@ class Issue extends Model
         ]);
 
         $this->fireModelEvent(IssueEvent::Validated->value);
+
+        return $this;
+    }
+
+    public function setDetails(array $attributes)
+    {
+        $diff = array_diff(array_keys($attributes), self::$updatableFields);
+
+        if (count($diff) !== 0) {
+            throw new InvalidArgumentException(
+                'Array must only contain the following keys: ' . implode(',', self::$updatableFields)
+            );
+        }
+
+        $this->update($attributes);
+        $this->fireModelEvent(IssueEvent::DetailsUpdated->value);
 
         return $this;
     }

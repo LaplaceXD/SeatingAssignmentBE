@@ -7,7 +7,6 @@ use App\Models\Issue;
 use App\Enums\IssueStatus;
 use App\Http\Requests\IssueProgressRequest;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -48,7 +47,7 @@ class IssueController extends Controller
         // todo add trail
         abort_if($issue->isCompleted, Response::HTTP_BAD_REQUEST, 'Issue is already frozen.');
 
-        $issue->update($request->safe()->all());
+        $issue->setDetails($request->safe()->all());
         return $issue->refresh();
     }
 

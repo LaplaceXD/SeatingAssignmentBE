@@ -21,9 +21,9 @@ class LaboratoryFactory extends Factory
     {
         return [
             'LabName' => 'Computer Laboratory',
-            'RoomNo' => fake()->numberBetween(10, 20),
-            'AisleNo' => str_pad(fake()->numberBetween(1, 5) * 2, 2, '0', STR_PAD_LEFT),
-            'FloorNo' => '04',
+            'RoomNo' => fake()->randomDigitNotZero(),
+            'AisleNo' => fake()->randomDigitNotZero(),
+            'FloorNo' => 4,
             'BuildingCode' => 'LB',
             'Capacity' => fake()->numberBetween(30, 50)
         ];

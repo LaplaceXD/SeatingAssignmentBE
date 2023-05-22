@@ -151,7 +151,7 @@ class Issue extends Model
         if ($this->isValidated) throw new Exception('This issue is already validated.');
 
         $user = Auth::user();
-        if (!$user) throw new AuthenticationException('There is no user logged in.');
+        if (!$user || !$user->IsActive) throw new AuthenticationException('There is no user logged in.');
         if (!$user->isAdmin) throw new UnauthorizedException('Current logged in user is not an admin.');
 
         $this->update([

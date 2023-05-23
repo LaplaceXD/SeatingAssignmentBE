@@ -24,13 +24,13 @@ return new class extends Migration
                 ->nullOnDelete();
 
             // Tracks the previous and current value of a field
-            $table->string('FieldName', 64);
-            $table->string('PreviousValue', 256);
-            $table->string('NewValue', 256);
+            $table->string('FieldName', 64)->default('');
+            $table->string('PreviousValue', 256)->default('');
+            $table->string('NewValue', 256)->default('');
 
             // Some Trails are just information messages
             // Ex. Issue Created
-            $table->text('Message');
+            $table->text('Message')->default('');
 
             $table->enum('ActionType', ['change', 'message']);
             $table->timestamp('ExecutedAt')->useCurrent();

@@ -7,11 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 use App\Enums\TrailActionType;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class IssueTrail extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+    protected $table = 'IssueTrails';
     protected $primaryKey = 'TrailID';
 
     protected $fillable = [

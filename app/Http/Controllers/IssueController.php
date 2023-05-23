@@ -92,6 +92,11 @@ class IssueController extends Controller
         return $issue->fresh();
     }
 
+    public function trails(Issue $issue)
+    {
+        return $issue->trails()->orderByDesc('ExecutedAt')->get();
+    }
+
     /**
      * Remove the specified resource from storage.
      */

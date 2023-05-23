@@ -43,13 +43,17 @@ Route::middleware('auth:sanctum')->group(function () {
             $notFound = fn () => abort(Response::HTTP_NOT_FOUND, 'Issue not found.');
 
             Route::get('/', 'index');
-            Route::post('/', 'store');
             Route::get('{issue}', 'show')->missing($notFound);
-            Route::put('{issue}', 'update')->can('ownerOrAdmin', 'issue')->missing($notFound);
-            Route::delete('{issue}', 'destroy')->can('admin', 'App\Models\Issue')->missing($notFound);
+            Route::get('{issue}/trails', 'trails')->missing($notFound);
+
+            Route::post('/', 'store');
             Route::post('{issue}/status', 'validated')->can('admin', 'App\Models\Issue')->missing($notFound);
+
+            Route::put('{issue}', 'update')->can('ownerOrAdmin', 'issue')->missing($notFound);
             Route::put('{issue}/status', 'updateStatus')->can('technician', 'App\Models\Issue')->missing($notFound);
             Route::put('{issue}/assignee', 'assign')->can('technician', 'App\Models\Issue')->missing($notFound);
+
+            Route::delete('{issue}', 'destroy')->can('admin', 'App\Models\Issue')->missing($notFound);
         });
 
         Route::resource('types', IssueTypeController::class)->missing(fn () => abort(Response::HTTP_NOT_FOUND, 'Issue Type not found.'));

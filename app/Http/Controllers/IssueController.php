@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\IssueDetailsRequest;
 use App\Models\Issue;
 use App\Enums\IssueStatus;
-use Carbon\Carbon;
+use App\Enums\UserRole;
+use App\Models\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class IssueController extends Controller
@@ -70,6 +74,22 @@ class IssueController extends Controller
 
         $issue->setStatus($status);
         return $issue->refresh();
+    }
+
+    public function assign(Request $request, Issue $issue)
+    {
+        abort_if($issue->isCompleted, Response::HTTP_BAD_REQUEST, 'Issue is already frozen.');
+        abort_unless($issue->isValidated, Response::HTTP_BAD_REQUEST, 'Issue is not yet validated.');
+
+        $fields = Validator::make($request->all(), [
+            'AssigneeID' => [
+                'required', 'numeric',
+                Rule::exists('Users', 'UserID')->where('Role', UserRole::Technician->value)
+            ]
+        ])->setAttributeNames(['AssigneeID' => 'assignee ID'])->validate();
+
+        $issue->setAssignee(User::where('UserID', $fields['AssigneeID'])->first());
+        return $issue->fresh();
     }
 
     /**

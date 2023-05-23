@@ -193,8 +193,9 @@ class Issue extends Model
         if ($user && $user->Role !== UserRole::Technician) throw new Exception('The user provided is not valid.');
 
         $this->assignee()->associate($user);
-        $this->fireModelEvent(IssueEvent::Assigned->value);
+        $this->save();
 
+        $this->fireModelEvent(IssueEvent::Assigned->value);
         return $this;
     }
 

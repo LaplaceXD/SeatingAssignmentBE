@@ -49,6 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('{issue}', 'destroy')->can('admin', 'App\Models\Issue')->missing($notFound);
             Route::post('{issue}/status', 'validated')->can('admin', 'App\Models\Issue')->missing($notFound);
             Route::put('{issue}/status', 'updateStatus')->can('technician', 'App\Models\Issue')->missing($notFound);
+            Route::put('{issue}/assignee', 'assign')->can('technician', 'App\Models\Issue')->missing($notFound);
         });
 
         Route::resource('types', IssueTypeController::class)->missing(fn () => abort(Response::HTTP_NOT_FOUND, 'Issue Type not found.'));

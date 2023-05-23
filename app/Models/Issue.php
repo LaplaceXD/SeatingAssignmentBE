@@ -99,7 +99,7 @@ class Issue extends Model
     protected function isValidated(): Attribute
     {
         return Attribute::make(
-            get: fn () => in_array($this->Status, IssueStatus::cases())
+            get: fn () => $this->ValidatorID !== null
         );
     }
 
@@ -202,6 +202,8 @@ class Issue extends Model
     {
         if (in_array($status, IssueStatus::completedCases()) && !$this->isCompleted) {
             $this->CompletedAt = Carbon::now();
+        } else if ($status !== IssueStatus::Dropped && $this->Status === IssueStatus::Dropped && !$this->isValidated) {
+            $this->validate();
         }
 
         $this->Status = $status;

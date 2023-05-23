@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use App\Http\Requests\UserDetailsRequest;
 use App\Http\Requests\ChangePasswordRequest;
 
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return User::where('IsActive', true)->get();
+        $role = $request->query('Role');
+
+        return User::active()
+            ->ofRole(UserRole::tryFrom($role))
+            ->orderByDesc('CreatedAt')
+            ->get();
     }
 
     /**

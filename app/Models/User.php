@@ -4,14 +4,15 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 use Laravel\Sanctum\HasApiTokens;
 
-use App\Enums\UserRole;
 
 class User extends Authenticatable
 {
@@ -70,6 +71,16 @@ class User extends Authenticatable
     public function trails(): HasMany
     {
         return $this->hasMany(IssueTrail::class, 'ExecutorID');
+    }
+
+    public function scopeOfRole(Builder $query, ?UserRole $role): void
+    {
+        $query->when($role, fn (Builder $query) => $query->where('Role', $role->value));
+    }
+
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('IsActive', true);
     }
 
     protected function isAdmin(): Attribute

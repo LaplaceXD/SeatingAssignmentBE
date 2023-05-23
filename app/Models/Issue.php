@@ -99,7 +99,7 @@ class Issue extends Model
     protected function isValidated(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->ValidatedAt !== null && $this->ValidatorID !== null
+            get: fn () => in_array($this->Status, IssueStatus::cases())
         );
     }
 
@@ -163,6 +163,7 @@ class Issue extends Model
         $this->update([
             'ValidatorID' => $user->UserID,
             'ValidatedAt' => Carbon::now(),
+            'Status' => IssueStatus::Pending
         ]);
 
         $this->fireModelEvent(IssueEvent::Validated->value);

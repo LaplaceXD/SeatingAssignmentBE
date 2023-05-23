@@ -35,24 +35,22 @@ class IssueSeeder extends Seeder
                 'TypeID' => $issueTypes->random(1)->first()?->TypeID
             ])
             ->sequence(function (Sequence $sequence) use ($professors, $technicians) {
-                $cases = IssueStatus::cases();
-                $state = [
-                    'Status' => $cases[rand(0, count($cases) - 1)],
-                    'ValidatorID' => $professors->random(1)->first()->UserID
-                ];
-                $coinFlip = rand(0, 1);
+                $cases = array_merge(IssueStatus::cases(), [IssueStatus::Dropped]);
+                $state = ['Status' => null, 'ValidatorID' => null, 'AssigneeID' => null];
 
-                // Accounts for cases wherein issues are stuck in raised (20% chance)
-                // or was immediately dropped due to not being replicable (50% chance if status is dropped)
-                if (rand(1, 5) === 1 || ($state['Status'] === IssueStatus::Dropped && $coinFlip === 1)) {
-                    $state['ValidatorID'] = null;
-                    $state['Status'] = null;
-                }
+                // There is a 5 / 6 chance that an issue is not stucked on raised 
+                if (rand(1, 6) > 1) {
+                    $state['Status'] = $cases[rand(0, count($cases) - 1)];
 
-                // Accounts for cases that are post validated (75 %), as well as pending cases that do not have
-                // an assigned personnel (25 %)
-                if ($state['ValidatorID'] !== null && rand(1, 4) > 1) {
-                    $state['AssigneeID'] = $technicians->random(1)->first()->UserID;
+                    // If the Status is dropped there is a 50% chance that it was not validated
+                    if ($state['Status'] !== IssueStatus::Dropped || rand(1, 2) === 1) {
+                        $state['ValidatorID'] = $professors->random(1)->first()->UserID;
+                    }
+
+                    // If issue is validated, it has a 75% chance to have an assignee
+                    if ($state['ValidatorID'] !== null && rand(1, 4) > 1) {
+                        $state['AssigneeID'] = $technicians->random(1)->first()->UserID;
+                    }
                 }
 
                 return $state;

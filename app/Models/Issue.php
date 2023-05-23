@@ -46,12 +46,12 @@ class Issue extends Model
         'Status' => IssueStatus::class
     ];
 
-    protected $dispatchesEvents = [
-        IssueEvent::Raised->value => \App\Events\IssueRaised::class,
-        IssueEvent::Validated->value => \App\Events\IssueValidated::class,
-        IssueEvent::DetailsUpdated->value => \App\Events\IssueDetailsUpdated::class,
-        IssueEvent::Assigned->value => \App\Events\IssueAssigned::class,
-        IssueEvent::StatusChanged->value => \App\Events\IssueStatusChanged::class
+    protected $observables = [
+        IssueEvent::Raised->value,
+        IssueEvent::Validated->value,
+        IssueEvent::DetailsUpdated->value,
+        IssueEvent::Assigned->value,
+        IssueEvent::StatusChanged->value
     ];
 
     public function issuer(): BelongsTo

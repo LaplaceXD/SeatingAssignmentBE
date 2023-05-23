@@ -8,18 +8,59 @@ use App\Models\User;
 
 class IssuePolicy
 {
-    public function technician(User $user): bool
+    public function update(User $user, Issue $issue): bool
     {
-        return $user->Role === UserRole::Technician;
+        /**
+         *  Policies
+         *  - Students and professors can update until issue gets validated
+         * -  Students can only update their own issue
+         *  - Technicians can update anytime
+         */
+
+        return !$issue->isValidated && ($user->Role === UserRole::Professor
+            || $user->Role === UserRole::Student && $issue->issuer()->is($user))
+            || $user->Role === UserRole::Technician;
     }
 
-    public function admin(User $user): bool
+    public function validated(User $user): bool
     {
+        /**
+         * Policies
+         * - Only professors and technicians can validate
+         */
+
         return $user->isAdmin;
     }
 
-    public function ownerOrAdmin(User $user, Issue $issue): bool
+    public function updateStatus(User $user): bool
     {
-        return $issue->issuer()->is($user) || $this->admin($user);
+        /**
+         * Policies
+         * - Only technicians can update status after validation
+         */
+
+        return $user->Role === UserRole::Technician;
+    }
+
+    public function assign(User $user): bool
+    {
+        /**
+         * Policies
+         * - Only technicians can assign
+         */
+
+        return $user->Role === UserRole::Technician;
+    }
+
+    public function destroy(User $user, Issue $issue): bool
+    {
+        /**
+         * Policies
+         * - Professors can drop, but can no longer drop if issue is validated
+         * - Technicians can drop anytime
+         */
+
+        return $user->Role === UserRole::Professor && !$issue->isValidated
+            || $user->Role === UserRole::Technician;
     }
 }

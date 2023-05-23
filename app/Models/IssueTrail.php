@@ -42,4 +42,41 @@ class IssueTrail extends Model
     {
         return $this->belongsTo(User::class, 'ExecutorID', 'IssueID');
     }
+
+    public static function logInfo(Issue $issue, string $message)
+    {
+        $user = Auth::user();
+        if (!$user) throw new AuthenticationException('There is no user logged in.');
+
+        return IssueTrail::create([
+            'IssueID' => $issue->IssueID,
+            'ExecutorID' => $user->UserID,
+            'Message' => $message,
+            'ActionType' => TrailActionType::Message
+        ]);
+    }
+
+    public static function logChange(Issue $issue)
+    {
+        $user = Auth::user();
+        if (!$user) throw new AuthenticationException('There is no user logged in.');
+
+        $baseState = [
+            'IssueID' => $issue->IssueID,
+            'ExecutorID' => $user->UserID,
+            'ActionType' => TrailActionType::Change
+        ];
+
+        foreach (array_merge(Issue::$updatableFields, ['AssigneeID']) as $field) {
+            if ($issue->isDirty($field)) {
+                IssueTrail::create(array_merge($baseState, [
+                    'FieldName' => $field,
+                    'PreviousValue' => $issue->getOriginal($field),
+                    'NewValue' => $issue->getAttribute($field)
+                ]));
+            }
+        }
+
+        return IssueTrail::all();
+    }
 }

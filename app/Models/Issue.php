@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 
-use App\Enums\IssueEvent;
 use App\Enums\IssueStatus;
 use App\Enums\UserRole;
 use Carbon\Carbon;
@@ -44,14 +43,6 @@ class Issue extends Model
 
     protected $casts = [
         'Status' => IssueStatus::class
-    ];
-
-    protected $observables = [
-        IssueEvent::Raised->value,
-        IssueEvent::Validated->value,
-        IssueEvent::DetailsUpdated->value,
-        IssueEvent::Assigned->value,
-        IssueEvent::StatusChanged->value
     ];
 
     public function issuer(): BelongsTo
@@ -147,7 +138,7 @@ class Issue extends Model
         $attributes['IssuerID'] = $user->UserID;
 
         $issue = self::create($attributes);
-        $issue->fireModelEvent(IssueEvent::Raised->value);
+        IssueTrail::logInfo($issue, 'Issue was raised.');
 
         return $issue->fresh();
     }
@@ -166,7 +157,7 @@ class Issue extends Model
             'Status' => IssueStatus::Pending
         ]);
 
-        $this->fireModelEvent(IssueEvent::Validated->value);
+        IssueTrail::logInfo($this, 'Issue was validated.');
 
         return $this;
     }
@@ -181,9 +172,10 @@ class Issue extends Model
             );
         }
 
-        $this->update($attributes);
-        $this->fireModelEvent(IssueEvent::DetailsUpdated->value);
+        $this->fill($attributes);
+        IssueTrail::logChange($this);
 
+        $this->save();
         return $this;
     }
 
@@ -193,9 +185,9 @@ class Issue extends Model
         if ($user && $user->Role !== UserRole::Technician) throw new Exception('The user provided is not valid.');
 
         $this->assignee()->associate($user);
-        $this->save();
+        IssueTrail::logChange($this);
 
-        $this->fireModelEvent(IssueEvent::Assigned->value);
+        $this->save();
         return $this;
     }
 
@@ -208,9 +200,9 @@ class Issue extends Model
         }
 
         $this->Status = $status;
-        $this->save();
+        IssueTrail::logInfo($this, 'Issue was ' . strtolower($status->value) . '.');
 
-        $this->fireModelEvent(IssueEvent::StatusChanged->value);
+        $this->save();
         return $this;
     }
 }

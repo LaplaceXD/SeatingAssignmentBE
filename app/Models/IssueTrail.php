@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 use App\Enums\TrailActionType;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class IssueTrail extends Model
 {
@@ -29,6 +29,15 @@ class IssueTrail extends Model
         'ActionType'
     ];
 
+    protected $visible = [
+        'IssueID',
+        'msg',
+        'executor_name',
+        'ExecutedAt'
+    ];
+
+    protected $appends = ['msg', 'executor_name'];
+
     protected $casts = [
         'ActionType' => TrailActionType::class
     ];
@@ -41,6 +50,50 @@ class IssueTrail extends Model
     public function executor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'ExecutorID', 'IssueID');
+    }
+
+    protected function msg(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (!$this->FieldName) return $this->Message;
+
+                switch ($this->FieldName) {
+                    case 'Description':
+                        return 'Changed issue description.';
+                    case 'ReplicationSteps':
+                        return 'Updated replication steps.';
+                    case 'SeatNo':
+                        return 'Changed seat number from \'' . $this->PreviousValue . '\' to \'' . $this->NewValue . '\'.';
+                    case 'LabID':
+                        $previous = Laboratory::find($this->PreviousValue);
+                        $new = Laboratory::find($this->NewValue);
+
+                        return 'Changed laboratory from \'' . $previous->labCode . '\' to \'' . $new->labCode . '\'.';
+                    case 'TypeID':
+                        $previous = IssueType::find($this->PreviousValue);
+                        $new = IssueType::find($this->NewValue);
+
+                        return 'Changed issue type from \'' . $previous->Name . '\' to \'' . $new->Name . '\'.';
+                    case 'AssigneeID':
+                        $new = User::find($this->NewValue);
+
+                        return ($this->previousValue ? 'Reassigned' : 'Assigned') . ' to \'' . $new->LastName . '\'.';
+                    default:
+                        return $this->Message;
+                }
+            }
+        );
+    }
+
+    protected function executorName(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $user = User::find($this->ExecutorID);
+                return $user->FirstName . ' ' . $user->LastName;
+            }
+        );
     }
 
     public static function logInfo(Issue $issue, string $message)
@@ -78,5 +131,15 @@ class IssueTrail extends Model
         }
 
         return IssueTrail::all();
+    }
+
+    public function transform()
+    {
+        return [
+            'IssueID' => $this->IssueID,
+            'Message' => $this->msg,
+            'ExecutorName' => $this->executor_name,
+            'ExecutedAt' => $this->ExecutedAt
+        ];
     }
 }

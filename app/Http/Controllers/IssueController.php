@@ -6,6 +6,7 @@ use App\Http\Requests\IssueDetailsRequest;
 use App\Models\Issue;
 use App\Enums\IssueStatus;
 use App\Enums\UserRole;
+use App\Models\IssueTrail;
 use App\Models\User;
 
 use Illuminate\Http\Request;
@@ -94,7 +95,7 @@ class IssueController extends Controller
 
     public function trails(Issue $issue)
     {
-        return $issue->trails()->orderByDesc('ExecutedAt')->get();
+        return $issue->trails()->orderByDesc('ExecutedAt')->get()->map(fn (IssueTrail $trail) => $trail->transform());
     }
 
     /**

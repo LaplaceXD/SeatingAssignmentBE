@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\IssueDetailsRequest;
 use App\Models\Issue;
 use App\Enums\IssueStatus;
-use App\Http\Requests\IssueProgressRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rules\Enum;
 
 class IssueController extends Controller
 {
@@ -61,20 +61,14 @@ class IssueController extends Controller
         return $issue->validate()->refresh();
     }
 
-    public function updateProgress(IssueProgressRequest $request, Issue $issue)
+    public function updateStatus(Request $request, Issue $issue)
     {
         abort_unless($issue->isValidated, Response::HTTP_BAD_REQUEST, 'Issue is not yet validated.');
 
-        $fields = $request->safe()->all();
-        if (
-            array_key_exists('Status', $fields) && $fields['Status']
-            && in_array(IssueStatus::from($fields['Status']), IssueStatus::completedCases())
-            && !in_array($issue->Status, IssueStatus::completedCases())
-        ) {
-            $fields['CompletedAt'] = Carbon::now();
-        }
+        $fields = $request->validate(['Status' => ['required', new Enum(IssueStatus::class)]]);
+        $status = IssueStatus::from($fields['Status']);
 
-        $issue->update($fields);
+        $issue->setStatus($status);
         return $issue->refresh();
     }
 

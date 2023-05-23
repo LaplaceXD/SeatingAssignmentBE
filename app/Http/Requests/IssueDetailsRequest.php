@@ -22,6 +22,7 @@ class IssueDetailsRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'Title' => ['required', 'string', 'max:64'],
             'LabID' => ['required', 'numeric', 'exists:Laboratories,LabID'],
             'TypeID' => ['nullable', 'numeric', 'exists:IssueTypes,TypeID'],
             'SeatNo' => ['required', 'string', 'alpha_num:ascii', 'between:1,4'],
@@ -33,6 +34,7 @@ class IssueDetailsRequest extends FormRequest
     public function attributes()
     {
         return [
+            'Title' => 'title',
             'IssuerID' => 'issuer ID',
             'LabID' => 'laboratory ID',
             'TypeID' => 'issue type ID',

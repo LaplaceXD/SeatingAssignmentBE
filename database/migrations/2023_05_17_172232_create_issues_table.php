@@ -41,6 +41,7 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
 
+            $table->string('Title', 64);
             $table->string('SeatNo', 4);
             $table->text('Description')->default('');
             $table->text('ReplicationSteps');

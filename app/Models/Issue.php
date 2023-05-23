@@ -22,7 +22,7 @@ class Issue extends Model
 {
     use HasFactory;
 
-    public static $updatableFields = ['LabID', 'TypeID', 'SeatNo', 'Description', 'ReplicationSteps'];
+    public static $updatableFields = ['Title', 'LabID', 'TypeID', 'SeatNo', 'Description', 'ReplicationSteps'];
 
     public $timestamps = false;
     protected $primaryKey = 'IssueID';
@@ -33,6 +33,7 @@ class Issue extends Model
         'AssigneeID',
         'LabID',
         'TypeID',
+        'Title',
         'SeatNo',
         'Description',
         'ReplicationSteps',

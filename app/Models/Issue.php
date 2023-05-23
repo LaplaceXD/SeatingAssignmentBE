@@ -200,7 +200,7 @@ class Issue extends Model
         }
 
         $this->Status = $status;
-        IssueTrail::logInfo($this, 'Issue was ' . strtolower($status->value) . '.');
+        IssueTrail::logChange($this);
 
         $this->save();
         return $this;

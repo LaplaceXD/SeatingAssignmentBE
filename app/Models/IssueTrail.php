@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\IssueStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,6 +31,7 @@ class IssueTrail extends Model
     ];
 
     protected $visible = [
+        'TrailID',
         'IssueID',
         'msg',
         'executor_name',
@@ -65,6 +67,8 @@ class IssueTrail extends Model
                         return 'Updated replication steps.';
                     case 'SeatNo':
                         return 'Changed seat number from \'' . $this->PreviousValue . '\' to \'' . $this->NewValue . '\'.';
+                    case 'Status':
+                        return 'Issue ' . (in_array(IssueStatus::from($this->NewValue), IssueStatus::completedCases()) ? 'was' : 'is') . ' ' . strtolower($this->NewValue) . '.';
                     case 'LabID':
                         $previous = Laboratory::find($this->PreviousValue);
                         $new = Laboratory::find($this->NewValue);
@@ -120,7 +124,7 @@ class IssueTrail extends Model
             'ActionType' => TrailActionType::Change
         ];
 
-        foreach (array_merge(Issue::$updatableFields, ['AssigneeID']) as $field) {
+        foreach (array_merge(Issue::$updatableFields, ['AssigneeID', 'Status']) as $field) {
             if ($issue->isDirty($field)) {
                 IssueTrail::create(array_merge($baseState, [
                     'FieldName' => $field,
@@ -136,6 +140,7 @@ class IssueTrail extends Model
     public function transform()
     {
         return [
+            'TrailID' => $this->TrailID,
             'IssueID' => $this->IssueID,
             'Message' => $this->msg,
             'ExecutorName' => $this->executor_name,

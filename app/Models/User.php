@@ -67,6 +67,11 @@ class User extends Authenticatable
         return $this->hasMany(Issue::class, 'AssigneeID');
     }
 
+    public function trails(): HasMany
+    {
+        return $this->hasMany(IssueTrail::class, 'ExecutorID');
+    }
+
     protected function isAdmin(): Attribute
     {
         return Attribute::make(

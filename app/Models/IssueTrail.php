@@ -14,6 +14,16 @@ class IssueTrail extends Model
 
     protected $primaryKey = 'TrailID';
 
+    protected $fillable = [
+        'IssueID',
+        'ExecutorID',
+        'FieldName',
+        'PreviousValue',
+        'NewValue',
+        'Message',
+        'ActionType'
+    ];
+
     protected $casts = [
         'ActionType' => TrailActionType::class
     ];
@@ -21,5 +31,10 @@ class IssueTrail extends Model
     public function issue(): BelongsTo
     {
         return $this->belongsTo(Issue::class, 'IssueID', 'IssueID');
+    }
+
+    public function executor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'ExecutorID', 'IssueID');
     }
 }

@@ -22,7 +22,7 @@ class IssueFactory extends Factory
     public function definition(): array
     {
         return [
-            'Title' => fake()->sentence(),
+            'Title' => fake()->sentence(3, false),
             'SeatNo' => strtoupper(chr(rand(0, 5) + ord('a'))) . fake()->randomDigit(),
             'Description' => fake('en')->paragraph(2),
             'ReplicationSteps' => function (array $attributes) {

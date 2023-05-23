@@ -75,11 +75,6 @@ class Issue extends Model
         return $this->hasMany(IssueTrail::class, 'IssueID');
     }
 
-    public function images(): HasMany
-    {
-        return $this->hasMany(Image::class, 'IssueID');
-    }
-
     protected function seatNo(): Attribute
     {
         return Attribute::make(

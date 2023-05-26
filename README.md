@@ -1,7 +1,7 @@
 # Seating Assignment Backend
 
 ![Last Update](https://img.shields.io/github/last-commit/LaplaceXD/SeatingAssignmentBE?color=blue&label=Last%20Update)
-![Activity](https://img.shields.io/badge/Activity-InProgress-blue)
+![Activity](https://img.shields.io/badge/Activity-Completed-blue)
 
 SeatingAssignmentBE is the backend service for the issue tracking and logging system made for the seats assigned in a laboratory. The primary stack used for this system is [React](https://beta.reactjs.org/) for the front-end, [Laravel](https://laravel.com/) for the back-end, and [MySQL](https://www.mysql.com/) for the database.
 

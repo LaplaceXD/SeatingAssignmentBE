@@ -66,6 +66,7 @@ fork this project, and improve on it!
 
 -   [FrontEnd](https://github.com/JulianErnest/CIS2201-Class-Project-FE) - Private Front-end
 -   [Postman Collection](https://www.postman.com/pan-team-42069/workspace/seatingassignment)
+-   [Database ERD](https://drive.google.com/file/d/15KpwS_wjltypArkUHD224PWOEZg9Lcjc/view?usp=sharing)
 
 ## License
 
